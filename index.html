@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiny Explorer Adventure Game – Explore Worlds, Discover Secrets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0b1a0f;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #e8f0e4;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes drift {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(6px) translateY(-4px); }
+            50% { transform: translateX(-3px) translateY(-8px); }
+            75% { transform: translateX(-6px) translateY(-3px); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+        }
+
+        .scene-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 120% 60% at 50% 110%, rgba(22, 78, 36, 0.5) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 40% at 20% 20%, rgba(16, 52, 30, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 85% 30%, rgba(20, 60, 35, 0.4) 0%, transparent 50%),
+                linear-gradient(180deg, #060e08 0%, #0b1a0f 30%, #122218 60%, #0b1a0f 100%);
+        }
+
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particles span {
+            position: absolute;
+            border-radius: 50%;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        .particles .firefly {
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ffe066 0%, rgba(255, 224, 102, 0) 70%);
+            box-shadow: 0 0 8px #ffe066;
+        }
+
+        .particles .firefly:nth-child(1) { top: 15%; left: 10%; animation-duration: 3.2s; animation-delay: 0s; }
+        .particles .firefly:nth-child(2) { top: 25%; left: 80%; animation-duration: 2.8s; animation-delay: 0.7s; }
+        .particles .firefly:nth-child(3) { top: 60%; left: 15%; animation-duration: 3.6s; animation-delay: 1.2s; }
+        .particles .firefly:nth-child(4) { top: 45%; left: 70%; animation-duration: 2.5s; animation-delay: 0.3s; }
+        .particles .firefly:nth-child(5) { top: 75%; left: 55%; animation-duration: 3.0s; animation-delay: 1.8s; }
+        .particles .firefly:nth-child(6) { top: 35%; left: 40%; animation-duration: 4.0s; animation-delay: 0.5s; }
+        .particles .firefly:nth-child(7) { top: 85%; left: 25%; animation-duration: 2.6s; animation-delay: 2.1s; }
+        .particles .firefly:nth-child(8) { top: 10%; left: 60%; animation-duration: 3.4s; animation-delay: 1.0s; }
+
+        .leaf-deco {
+            position: fixed;
+            font-size: 28px;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 8s ease-in-out infinite;
+        }
+
+        .leaf-deco:nth-child(1) { top: 8%; right: 6%; animation-delay: 0s; }
+        .leaf-deco:nth-child(2) { bottom: 12%; left: 4%; animation-delay: 2s; font-size: 22px; }
+        .leaf-deco:nth-child(3) { top: 50%; right: 3%; animation-delay: 4s; font-size: 20px; }
+        .leaf-deco:nth-child(4) { top: 30%; left: 2%; animation-delay: 1s; font-size: 24px; }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 740px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero-card {
+            background: linear-gradient(170deg, rgba(20, 50, 30, 0.85) 0%, rgba(12, 28, 18, 0.92) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 28px;
+            border: 1.5px solid rgba(100, 200, 120, 0.18);
+            box-shadow:
+                0 24px 64px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(80, 180, 100, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            padding: 48px 44px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 24px;
+            background: linear-gradient(145deg, #2d8a4e 0%, #1a6b35 40%, #0f4a24 100%);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            box-shadow:
+                0 12px 40px rgba(34, 120, 60, 0.45),
+                inset 0 2px 0 rgba(200, 255, 210, 0.15);
+            border: 2px solid rgba(100, 220, 130, 0.35);
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .title {
+            font-family: 'Fredoka', sans-serif;
+            color: #fff;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .title .accent {
+            color: #5ee882;
+            text-shadow: 0 0 24px rgba(94, 232, 130, 0.3);
+        }
+
+        .tagline {
+            font-family: 'Fredoka', sans-serif;
+            color: #a8d8b0;
+            font-size: 1.15em;
+            font-weight: 500;
+            margin-bottom: 24px;
+            letter-spacing: 0.02em;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            background: rgba(94, 232, 130, 0.08);
+            border: 1.5px solid rgba(94, 232, 130, 0.22);
+            border-radius: 24px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #a8d8b0;
+        }
+
+        .story-text {
+            text-align: left;
+            color: #c8dece;
+            font-size: 1.04em;
+            line-height: 1.85;
+            margin-bottom: 32px;
+            padding: 0 4px;
+        }
+
+        .story-text .lead {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.08em;
+        }
+
+        .features-section {
+            background: linear-gradient(170deg, rgba(18, 44, 26, 0.8) 0%, rgba(10, 24, 16, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1.5px solid rgba(100, 200, 120, 0.14);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+            padding: 40px 44px;
+            margin-bottom: 24px;
+        }
+
+        .features-title {
+            font-family: 'Fredoka', sans-serif;
+            color: #fff;
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .features-title .accent {
+            color: #ffd700;
+            text-shadow: 0 0 16px rgba(255, 215, 0, 0.3);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(100, 200, 120, 0.1);
+            border-radius: 16px;
+            padding: 20px 18px;
+            transition: transform 0.25s, background 0.25s;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-3px);
+            background: rgba(94, 232, 130, 0.06);
+        }
+
+        .feature-item .icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: block;
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        .feature-item .icon:nth-child(1) { animation-delay: 0s; }
+
+        .feature-item h4 {
+            font-family: 'Fredoka', sans-serif;
+            color: #e8f8ec;
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .feature-item p {
+            color: #a0c4a8;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 12px 0 0;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(145deg, #2ecc71 0%, #27ae60 50%, #1e8449 100%);
+            color: #fff;
+            padding: 16px 40px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            border: 2px solid rgba(200, 255, 210, 0.3);
+            box-shadow: 0 10px 32px rgba(46, 204, 113, 0.35);
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(46, 204, 113, 0.5);
+            color: #fff;
+        }
+
+        .cta-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .footer-bar {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid rgba(100, 200, 120, 0.12);
+            font-size: 0.88em;
+            color: #6a8a70;
+        }
+
+        .footer-bar a {
+            color: #5ee882;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-bar a:hover {
+            color: #a8f0b8;
+        }
+
+        @media (max-width: 640px) {
+            .hero-card { padding: 36px 22px; border-radius: 22px; }
+            .features-section { padding: 32px 22px; }
+            .title { font-size: 1.7em; }
+            .app-icon { width: 100px; height: 100px; font-size: 46px; border-radius: 22px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .tagline { font-size: 1.02em; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scene-bg"></div>
+
+    <div class="particles">
+        <span class="firefly"></span>
+        <span class="firefly"></span>
+        <span class="firefly"></span>
+        <span class="firefly"></span>
+        <span class="firefly"></span>
+        <span class="firefly"></span>
+        <span class="firefly"></span>
+        <span class="firefly"></span>
+    </div>
+
+    <div class="leaf-deco">🍃</div>
+    <div class="leaf-deco">🌿</div>
+    <div class="leaf-deco">🍂</div>
+    <div class="leaf-deco">🌱</div>
+
+    <div class="page-wrapper">
+        <div class="hero-card">
+            <div class="app-icon">🧭</div>
+            <h1 class="title">Tiny <span class="accent">Explorer</span> Adventure Game</h1>
+            <p class="tagline">Explore Worlds. Discover Secrets.</p>
+
+            <div class="badges">
+                <span class="badge">🆓 Free to Play</span>
+                <span class="badge">🗺️ Adventure</span>
+                <span class="badge">📱 iPhone & iPad</span>
+                <span class="badge">⭐ Ages 4+</span>
+            </div>
+
+            <div class="story-text">
+                <p><span class="lead">Join a tiny hero on a big adventure!</span> Explore new worlds, solve puzzles, and uncover hidden treasures. Step into a world of adventure with Tiny Explorer Adventure Game! Guide your tiny explorer through exciting lands filled with mysteries, challenges, and hidden treasures. From lush forests to secret caves, every level is packed with fun discoveries and surprises.</p>
+            </div>
+
+            <div class="cta-section">
+                <a href="https://apps.apple.com/us/app/tiny-explorer-adventure-game/id6760719255?uo=4" class="cta-btn" target="_blank" rel="noopener noreferrer">
+                    Download on App Store
+                </a>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="features-title">What Awaits <span class="accent">You</span></h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="icon">🌳</span>
+                    <h4>Lush Forests</h4>
+                    <p>Wander through vibrant, hand-crafted forest worlds teeming with life and hidden paths waiting to be found.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">🔮</span>
+                    <h4>Mind-Bending Puzzles</h4>
+                    <p>Solve creative puzzles that challenge your wits and reward your curiosity at every turn.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">💎</span>
+                    <h4>Hidden Treasures</h4>
+                    <p>Uncover secret collectibles, rare gems, and mysterious artifacts tucked away in every corner.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">🕳️</span>
+                    <h4>Secret Caves</h4>
+                    <p>Descend into dark, winding caves full of surprises, ancient relics, and exciting challenges.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">🗺️</span>
+                    <h4>New Worlds to Explore</h4>
+                    <p>Each level brings a brand-new environment with unique landscapes, creatures, and discoveries.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">🏆</span>
+                    <h4>Fun for Everyone</h4>
+                    <p>Designed for adventurers of all ages — easy to pick up, impossible to put down.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <p><a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp; © Tiny Explorer Adventure Game</p>
+        </div>
+    </div>
+</body>
+
+</html>

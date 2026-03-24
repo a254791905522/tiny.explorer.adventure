@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy – Tiny Explorer Adventure Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0b1a0f;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #c8dece;
+            line-height: 1.75;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.25; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        .scene-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 100% 50% at 50% 100%, rgba(22, 78, 36, 0.35) 0%, transparent 50%),
+                radial-gradient(ellipse 70% 40% at 15% 15%, rgba(16, 52, 30, 0.5) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 45% at 90% 40%, rgba(20, 60, 35, 0.3) 0%, transparent 50%),
+                linear-gradient(180deg, #060e08 0%, #0b1a0f 35%, #122218 65%, #0b1a0f 100%);
+        }
+
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particles span {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe066 0%, rgba(255, 224, 102, 0) 70%);
+            box-shadow: 0 0 6px #ffe066;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        .particles span:nth-child(1) { top: 12%; left: 8%; animation-duration: 3.4s; animation-delay: 0s; }
+        .particles span:nth-child(2) { top: 30%; left: 85%; animation-duration: 2.6s; animation-delay: 0.9s; }
+        .particles span:nth-child(3) { top: 55%; left: 12%; animation-duration: 3.8s; animation-delay: 1.5s; }
+        .particles span:nth-child(4) { top: 70%; left: 72%; animation-duration: 2.9s; animation-delay: 0.4s; }
+        .particles span:nth-child(5) { top: 20%; left: 55%; animation-duration: 3.2s; animation-delay: 2.0s; }
+        .particles span:nth-child(6) { top: 82%; left: 35%; animation-duration: 4.1s; animation-delay: 0.7s; }
+
+        .vine-deco {
+            position: fixed;
+            font-size: 24px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+            animation: sway 6s ease-in-out infinite;
+        }
+
+        .vine-deco:nth-child(1) { top: 5%; right: 4%; }
+        .vine-deco:nth-child(2) { bottom: 8%; left: 3%; animation-delay: 1.5s; }
+        .vine-deco:nth-child(3) { top: 45%; right: 2%; animation-delay: 3s; font-size: 20px; }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .privacy-card {
+            background: linear-gradient(170deg, rgba(20, 50, 30, 0.88) 0%, rgba(10, 24, 16, 0.94) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 28px;
+            border: 1.5px solid rgba(100, 200, 120, 0.16);
+            box-shadow:
+                0 22px 56px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(80, 180, 100, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            padding: 44px 42px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .header-icon {
+            font-size: 40px;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-family: 'Fredoka', sans-serif;
+            color: #fff;
+            font-size: 1.9em;
+            font-weight: 700;
+        }
+
+        .header h1 .accent {
+            color: #5ee882;
+        }
+
+        .breadcrumb {
+            font-size: 0.88em;
+            color: #6a8a70;
+            margin-bottom: 28px;
+            padding-bottom: 22px;
+            border-bottom: 1.5px solid rgba(100, 200, 120, 0.12);
+        }
+
+        .breadcrumb a {
+            color: #5ee882;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .breadcrumb a:hover {
+            color: #a8f0b8;
+        }
+
+        .updated-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(94, 232, 130, 0.07);
+            border: 1px solid rgba(94, 232, 130, 0.15);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.84em;
+            color: #a8d8b0;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            font-family: 'Fredoka', sans-serif;
+            color: #5ee882;
+            font-size: 1.18em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 .sec-icon {
+            font-size: 20px;
+        }
+
+        .section p {
+            color: #c0d4c6;
+            font-size: 0.97em;
+            margin-bottom: 10px;
+        }
+
+        .section ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .section ul li {
+            position: relative;
+            padding-left: 22px;
+            margin: 8px 0;
+            color: #c0d4c6;
+            font-size: 0.95em;
+        }
+
+        .section ul li::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: #5ee882;
+            font-size: 0.75em;
+            top: 4px;
+        }
+
+        strong {
+            color: #e8f8ec;
+            font-weight: 700;
+        }
+
+        a {
+            color: #5ee882;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #a8f0b8;
+        }
+
+        .highlight-box {
+            background: rgba(94, 232, 130, 0.06);
+            border: 1px solid rgba(94, 232, 130, 0.18);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .highlight-box p {
+            margin: 5px 0;
+        }
+
+        .contact-grid {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .contact-grid .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 0.94em;
+        }
+
+        .contact-grid .label {
+            color: #6a8a70;
+            min-width: 100px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 34px;
+            padding: 13px 28px;
+            background: linear-gradient(145deg, #2ecc71 0%, #27ae60 50%, #1e8449 100%);
+            color: #fff;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 0.98em;
+            border-radius: 14px;
+            border: 2px solid rgba(200, 255, 210, 0.25);
+            box-shadow: 0 8px 28px rgba(46, 204, 113, 0.3);
+            text-decoration: none;
+            transition: all 0.3s;
+            letter-spacing: 0.02em;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 34px rgba(46, 204, 113, 0.45);
+            color: #fff;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(94, 232, 130, 0.15) 50%, transparent 100%);
+            margin: 6px 0 30px;
+        }
+
+        @media (max-width: 640px) {
+            .privacy-card { padding: 32px 22px; border-radius: 22px; }
+            .header { flex-wrap: wrap; }
+            .header h1 { font-size: 1.55em; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scene-bg"></div>
+
+    <div class="particles">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+    </div>
+
+    <div class="vine-deco">🌿</div>
+    <div class="vine-deco">🍃</div>
+    <div class="vine-deco">🌱</div>
+
+    <div class="page-wrapper">
+        <div class="privacy-card">
+            <div class="header">
+                <span class="header-icon">🧭</span>
+                <h1>Privacy <span class="accent">Policy</span></h1>
+            </div>
+
+            <p class="breadcrumb"><a href="index.html">Tiny Explorer Adventure Game</a> &nbsp;/&nbsp; Privacy Policy</p>
+
+            <span class="updated-date">📅 Last updated: March 2026</span>
+
+            <div class="section">
+                <h2><span class="sec-icon">🌍</span> About This Policy</h2>
+                <p>Welcome, explorer! This Privacy Policy explains how information is handled when you use the Tiny Explorer Adventure Game app and visit this website. We believe your privacy is a treasure worth protecting — just like the hidden gems in our game. We are committed to being clear and straightforward about our practices.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2><span class="sec-icon">🛡️</span> Information We Do Not Collect</h2>
+                <p>Tiny Explorer Adventure Game does not collect personal data from its players. Specifically:</p>
+                <ul>
+                    <li>We do not gather names, email addresses, phone numbers, or mailing addresses.</li>
+                    <li>We do not track device identifiers, advertising IDs, or IP addresses to identify you.</li>
+                    <li>We do not collect location or geolocation information.</li>
+                    <li>We do not record or transmit gameplay statistics such as scores, levels reached, or time spent playing.</li>
+                </ul>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2><span class="sec-icon">📦</span> On-Device Storage</h2>
+                <p>Certain information — such as your game progress, unlocked levels, collected treasures, and preference settings (e.g., sound or display options) — may be saved locally on your device. This data remains entirely on your device and is never sent to us or shared with any third party. Removing the app from your device will delete this locally stored data.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2><span class="sec-icon">🔗</span> External Links and Third Parties</h2>
+                <p>Tiny Explorer Adventure Game does not integrate third-party analytics, tracking tools, or advertising SDKs that collect your personal information. This website may contain links to external services such as the Apple App Store. Those services operate under their own privacy policies, which are beyond our control. We encourage you to review their policies when navigating away from our site.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2><span class="sec-icon">👶</span> Young Explorers</h2>
+                <p>Tiny Explorer Adventure Game is designed to be enjoyed by adventurers of all ages and is rated 4+ on the App Store. Because we do not collect any personal information from any user, our practices are consistent with applicable children's privacy regulations. We do not knowingly solicit or store data from children or any other age group.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2><span class="sec-icon">🔄</span> Updates to This Policy</h2>
+                <p>We may revise this Privacy Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. When we do, the "Last updated" date shown above will be revised accordingly. Your continued use of the app or this website following any updates signifies your acceptance of the revised terms. We suggest revisiting this page periodically to stay informed.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2><span class="sec-icon">✉️</span> Contact Us</h2>
+                <p>If you have any questions, concerns, or feedback about this Privacy Policy or Tiny Explorer Adventure Game, feel free to reach out:</p>
+                <div class="highlight-box">
+                    <div class="contact-grid">
+                        <div class="row">
+                            <span class="label">Developer:</span>
+                            <strong>Shaban Tanjil</strong>
+                        </div>
+                        <div class="row">
+                            <span class="label">App Store:</span>
+                            <a href="https://apps.apple.com/us/app/tiny-explorer-adventure-game/id6760719255?uo=4" target="_blank" rel="noopener noreferrer">View on App Store</a>
+                        </div>
+                    </div>
+                </div>
+                <p>We will do our best to respond to any inquiries in a timely manner.</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="index.html" class="back-btn">← Back to Adventure</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
